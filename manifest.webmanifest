@@ -1,0 +1,17 @@
+{
+  "id": "./",
+  "name": "今日热榜",
+  "short_name": "热榜",
+  "description": "百度、微博、头条、华尔街见闻与历史上的今天，一页查看。",
+  "lang": "zh-CN",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#f5f6f8",
+  "theme_color": "#f7f8fa",
+  "icons": [
+    {"src": "./icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any"},
+    {"src": "./icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any"}
+  ]
+}

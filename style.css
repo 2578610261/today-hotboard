@@ -54,6 +54,7 @@ h2 { margin: 5px 0 0; font-size: 19px; letter-spacing: -.35px; line-height: 1.3;
 .retry-button { border: 0; padding: 4px 9px; border-radius: 7px; background: var(--blue-soft); color: var(--blue); font-size: 10px; }
 .trend-list { list-style: none; margin: 0; padding: 0 18px 6px; }
 .trend-item { display: grid; grid-template-columns: 22px minmax(0,1fr); gap: 10px; align-items: start; padding: 13px 0; border-top: 1px solid #f0f2f5; cursor: pointer; }
+.trend-item.no-rank { grid-template-columns: minmax(0,1fr); }
 .trend-item:active { opacity: .65; }
 .trend-rank { padding-top: 1px; color: #aab1bc; font-size: 12px; line-height: 1.55; font-variant-numeric: tabular-nums; text-align: center; }
 .trend-item:nth-child(1) .trend-rank { color: #df665b; font-weight: 760; }

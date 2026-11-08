@@ -280,7 +280,8 @@ function render() {
   for (let i = 0; i < items.length; i++) {
     const item = items[i];
     const li = document.createElement('li');
-    li.className = 'trend-item';
+    const showRank = activeSource !== 'history_wiki';
+    li.className = showRank ? 'trend-item' : 'trend-item no-rank';
     const rank = document.createElement('span');
     rank.className = 'trend-rank';
     rank.textContent = String(i + 1).padStart(2, '0');
@@ -308,7 +309,7 @@ function render() {
       meta.textContent = item.hot;
       content.append(meta);
     }
-    li.append(rank, content);
+    if (showRank) li.append(rank, content); else li.append(content);
     els.list.append(li);
   }
 }

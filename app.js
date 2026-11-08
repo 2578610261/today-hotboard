@@ -1,17 +1,17 @@
 'use strict';
 
 const SOURCE_INFO = {
+  history_wiki: { name: '历史上的今天', eyebrow: 'ON THIS DAY', endpoint: 'https://zh.wikipedia.org/w/api.php' },
   baidu: { name: '百度热搜', eyebrow: 'BAIDU TRENDING', endpoint: 'https://newsnow.busiyi.world/api/s?id=baidu' },
   weibo: { name: '微博热搜', eyebrow: 'WEIBO TRENDING', endpoint: 'https://newsnow.busiyi.world/api/s?id=weibo' },
-  toutiao: { name: '今日头条', eyebrow: 'TOUTIAO TRENDING', endpoint: 'https://newsnow.busiyi.world/api/s?id=toutiao' },
   wallstreetcn: { name: '华尔街见闻', eyebrow: 'WALLSTREETCN', endpoint: 'https://newsnow.busiyi.world/api/s?id=wallstreetcn' },
-  history: { name: '历史上的今天', eyebrow: 'ON THIS DAY', endpoint: 'https://baike.baidu.com/cms/home/eventsOnHistory' },
-  history_wiki: { name: '历史上的今天 · 维基百科', eyebrow: 'WIKIPEDIA · ON THIS DAY', endpoint: 'https://zh.wikipedia.org/w/api.php' }
+  toutiao: { name: '今日头条', eyebrow: 'TOUTIAO TRENDING', endpoint: 'https://newsnow.busiyi.world/api/s?id=toutiao' },
+  history: { name: '历史上的今天_百度', eyebrow: 'ON THIS DAY', endpoint: 'https://baike.baidu.com/cms/home/eventsOnHistory' }
 };
 const CACHE_KEY = 'today-hotboard-cache-v1';
 const REFRESH_INTERVAL = 5 * 60 * 1000;
 const MAX_ITEMS = 40;
-let activeSource = 'baidu';
+let activeSource = 'history_wiki';
 let cache = readCache();
 let refreshInProgress = false;
 let lastRefreshAttempt = 0;

@@ -1,0 +1,42 @@
+name: 抓取热榜并部署到 GitHub Pages
+
+on:
+  push:
+    branches: [main, master]
+  schedule:
+    - cron: '*/5 * * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: 抓取四个热榜数据
+        run: node scripts/fetch-data.mjs
+      - name: 组装站点文件
+        run: |
+          mkdir _site
+          cp index.html app.js style.css manifest.webmanifest sw.js icon.svg _site/
+          cp -r icons data _site/
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+      - id: deployment
+        uses: actions/deploy-pages@v4

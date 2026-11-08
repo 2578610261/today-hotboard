@@ -91,12 +91,31 @@ async function fetchText(url, timeoutMs = 15000) {
     return await response.text();
   } finally { clearTimeout(timeout); }
 }
+const STATIC_MAX_AGE = 30 * 60 * 1000;
 async function fetchNewsNow(id) {
   const src = SOURCE_INFO[id];
-  const json = await fetchJson(src.endpoint);
-  const items = extractItems(json, 'https://newsnow.busiyi.world/');
-  if (!items.length) throw new Error('接口返回为空或数据格式发生变化');
-  return { id, name: src.name, items, updatedAt: Date.now(), status: 'ok' };
+  const make = (items, updatedAt) => ({ id, name: src.name, items, updatedAt, status: 'ok' });
+  // 1) 优先读同域 data/<id>.json（由 GitHub Actions 服务器端抓取，没有跨域问题）
+  let fromStatic = null;
+  let staticError = '';
+  try {
+    const json = await fetchJson(`./data/${id}.json?t=${Date.now()}`, 10000);
+    const items = extractItems(json, window.location.href);
+    if (items.length) fromStatic = { items, at: Number(json.generatedAt) || 0 };
+    else staticError = '数据文件为空';
+  } catch (error) { staticError = readableError(error); }
+  if (fromStatic && Date.now() - fromStatic.at <= STATIC_MAX_AGE) return make(fromStatic.items, fromStatic.at);
+  // 2) 数据文件缺失或太旧：再尝试浏览器直连 NewsNow（可能被跨域拦截）
+  try {
+    const json = await fetchJson(src.endpoint, 10000);
+    const items = extractItems(json, 'https://newsnow.busiyi.world/');
+    if (!items.length) throw new Error('接口返回为空或数据格式发生变化');
+    return make(items, Date.now());
+  } catch (error) {
+    // 3) 都失败：宁可显示带真实时间的旧数据，也不要空白
+    if (fromStatic) return make(fromStatic.items, fromStatic.at);
+    throw new Error(`同域数据：${staticError || '无'}；直连：${readableError(error)}`);
+  }
 }
 function findDayList(json, mm, dd) {
   const key = mm + dd;
